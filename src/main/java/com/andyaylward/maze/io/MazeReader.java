@@ -5,8 +5,13 @@ import com.andyaylward.maze.core.FillablePoint;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.andyaylward.maze.exceptions.InvalidPointInputException;
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,18 +28,24 @@ public class MazeReader {
   }
 
   public Maze readMazeFromInput() {
-    List<FillablePoint[]> rows = new ArrayList<>();
-    for (int lineNumber=0; scanner.hasNextLine(); lineNumber++) {
+    List<String> rawRows = new ArrayList<>();
+    while (scanner.hasNextLine()) {
       String rawRow = scanner.nextLine();
-
       if (rawRow.isEmpty()) {
         break;
       }
-
-      FillablePoint[] row = parseMazeRow(rawRow, lineNumber);
-      rows.add(row);
+      rawRows.add(rawRow);
     }
-    return new Maze(rows.toArray(new FillablePoint[0][0]));
+
+    return fromLines(rawRows);
+  }
+
+  public Maze readMazeFromFile(Path path) {
+    try {
+      return fromLines(Files.readAllLines(path, Charsets.UTF_8));
+    } catch (IOException e) {
+      throw Throwables.propagate(e);
+    }
   }
 
   public Optional<Point> readPointFromInput() {
@@ -57,6 +68,16 @@ public class MazeReader {
     int yCoordinate = Integer.parseInt(coordinates[2]);
 
     return new Point(xCoordinate, yCoordinate);
+  }
+
+  private Maze fromLines(List<String> lines) {
+    List<FillablePoint[]> rows = new ArrayList<>();
+
+    for (int lineNumber=0; lineNumber<lines.size(); lineNumber++) {
+      rows.add(parseMazeRow(lines.get(lineNumber), lineNumber));
+    }
+
+    return new Maze(rows.toArray(new FillablePoint[0][0]));
   }
 
   private FillablePoint[] parseMazeRow(String line, int lineNumber) {
