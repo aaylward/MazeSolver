@@ -1,29 +1,23 @@
 package com.andyaylward.maze;
 
-import com.andyaylward.maze.config.IOModule.StandardOutput;
 import com.andyaylward.maze.config.MazeModule;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
+import com.andyaylward.maze.core.SolveStatistics;
 import com.andyaylward.maze.io.MazeConsole;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import java.io.PrintStream;
-import java.time.Clock;
-
 public class Application {
   private final MazeConsole mazeConsole;
-  private final Clock clock;
-  private final PrintStream printStream;
+  private final MazeSolver mazeSolver;
 
   @Inject
   public Application(MazeConsole mazeConsole,
-                     Clock clock,
-                     @StandardOutput PrintStream printStream) {
+                     MazeSolver mazeSolver) {
     this.mazeConsole = mazeConsole;
-    this.clock = clock;
-    this.printStream = printStream;
+    this.mazeSolver = mazeSolver;
   }
 
   public void run() {
@@ -31,13 +25,8 @@ public class Application {
     Point start = mazeConsole.getStart();
     Point end = mazeConsole.getEnd();
 
-    long startTime = clock.millis();
-    int shortestPath = MazeSolver.shortestPath(maze, start, end);
-    long endTime = clock.millis();
-
-    printStream.println();
-    printStream.println("The shortest path is " + shortestPath + " steps long.");
-    printStream.println("MazeSolver took " + (endTime - startTime) + " ms to compute it.");
+    SolveStatistics solveStatistics = mazeSolver.shortestPath(maze, start, end);
+    mazeConsole.reportStatistics(solveStatistics);
   }
 
   public static void main(String... args) {
