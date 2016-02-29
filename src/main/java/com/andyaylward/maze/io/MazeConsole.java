@@ -3,6 +3,7 @@ package com.andyaylward.maze.io;
 import com.andyaylward.maze.config.IOModule.StandardOutput;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
+import com.andyaylward.maze.core.SolveStatistics;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 
@@ -31,6 +32,12 @@ public class MazeConsole {
 
   public Point getEnd() {
     return getPoint("Enter end point: ", "You must provide an end point.");
+  }
+
+  public void reportStatistics(SolveStatistics solveStatistics) {
+    printStream.println();
+    printStream.println("The shortest path is " + solveStatistics.getShortestPathLength() + " steps long.");
+    printStream.println("MazeSolver took " + solveStatistics.getRunDuration() + " ms to compute it.");
   }
 
   private Point getPoint(String prompt, String error) {

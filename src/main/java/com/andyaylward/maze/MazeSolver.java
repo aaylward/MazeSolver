@@ -3,18 +3,27 @@ package com.andyaylward.maze;
 import com.andyaylward.maze.core.FillablePoint;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
+import com.andyaylward.maze.core.SolveStatistics;
 import com.andyaylward.maze.exceptions.NoPathFoundException;
+import com.google.inject.Inject;
 
+import java.time.Clock;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MazeSolver {
-  private MazeSolver() {
+  private final Clock clock;
+
+  @Inject
+  public MazeSolver(Clock clock) {
+    this.clock = clock;
   }
 
-  public static int shortestPath(Maze maze, Point start, Point end) {
+  public SolveStatistics shortestPath(Maze maze, Point start, Point end) {
+    long startTime = clock.millis();
+
     int distanceTravelled = 0;
     Set<Point> visitedPoints = new HashSet<>();
     Set<Point> currentPossibilities = new HashSet<>();
@@ -22,7 +31,8 @@ public class MazeSolver {
 
     while (!currentPossibilities.isEmpty()) {
       if (currentPossibilities.contains(end)) {
-        return distanceTravelled;
+        long endTime = clock.millis();
+        return new SolveStatistics(distanceTravelled, endTime - startTime);
       }
 
       visitedPoints.addAll(currentPossibilities);
@@ -34,14 +44,14 @@ public class MazeSolver {
     throw new NoPathFoundException();
   }
 
-  private static Set<Point> generateNewPossibilities(FillablePoint[][] rows, Set<Point> visitedPoints, Set<Point> currentPoints) {
+  private Set<Point> generateNewPossibilities(FillablePoint[][] rows, Set<Point> visitedPoints, Set<Point> currentPoints) {
     return currentPoints.stream()
         .map((p) -> getPossibleAdjacentPoints(rows, visitedPoints, p))
         .flatMap(Collection::stream)
         .collect(Collectors.toSet());
   }
 
-  private static Set<Point> getPossibleAdjacentPoints(FillablePoint[][] rows, Set<Point> visitedPoints, Point point) {
+  private Set<Point> getPossibleAdjacentPoints(FillablePoint[][] rows, Set<Point> visitedPoints, Point point) {
     Set<Point> newPoints = new HashSet<>();
 
     if (point.x > 0 && rows[point.x - 1][point.y].empty) {
@@ -63,7 +73,7 @@ public class MazeSolver {
     return newPoints;
   }
 
-  private static void addPointIfNotVisited(Set<Point> visitedPoints, Set<Point> newPoints, int x, int y) {
+  private void addPointIfNotVisited(Set<Point> visitedPoints, Set<Point> newPoints, int x, int y) {
     Point newPoint = new Point(x, y);
     if (!visitedPoints.contains(newPoint)) {
       newPoints.add(newPoint);

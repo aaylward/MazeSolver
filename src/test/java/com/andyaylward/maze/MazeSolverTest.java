@@ -3,17 +3,22 @@ package com.andyaylward.maze;
 import com.andyaylward.maze.core.FillablePoint;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
+import com.andyaylward.maze.core.SolveStatistics;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.time.Clock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MazeSolverTest {
   private static final int SIZE = 5;
   private FillablePoint[][] rows = new FillablePoint[SIZE][SIZE];
+  private MazeSolver mazeSolver;
 
   @Before
   public void setUp() {
+    mazeSolver = new MazeSolver(Clock.systemUTC());
     //    . . . x x
     //    . x . . .
     //    . x x x .
@@ -46,7 +51,8 @@ public class MazeSolverTest {
   public void itCanFindAnOnlyPath() {
     Point start = new Point(3, 2);
     Point end = new Point(4, 0);
-    assertThat(MazeSolver.shortestPath(new Maze(rows), start, end)).isEqualTo(13);
+    SolveStatistics solveStatistics = mazeSolver.shortestPath(new Maze(rows), start, end);
+    assertThat(solveStatistics.getShortestPathLength()).isEqualTo(13);
   }
 
   private void emptyPoint(int x, int y) {
