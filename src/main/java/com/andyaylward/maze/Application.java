@@ -4,44 +4,37 @@ import com.andyaylward.maze.config.IOModule.StandardOutput;
 import com.andyaylward.maze.config.MazeModule;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
-import com.andyaylward.maze.io.MazeReader;
-import com.google.common.base.Preconditions;
+import com.andyaylward.maze.io.MazeConsole;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import java.io.PrintStream;
 import java.time.Clock;
-import java.util.Optional;
 
 public class Application {
-  private final MazeReader mazeReader;
-  private final PrintStream printStream;
+  private final MazeConsole mazeConsole;
   private final Clock clock;
+  private final PrintStream printStream;
 
   @Inject
-  public Application(MazeReader mazeReader,
-                     @StandardOutput PrintStream printStream,
-                     Clock clock) {
-    this.mazeReader = mazeReader;
-    this.printStream = printStream;
+  public Application(MazeConsole mazeConsole,
+                     Clock clock,
+                     @StandardOutput PrintStream printStream) {
+    this.mazeConsole = mazeConsole;
     this.clock = clock;
+    this.printStream = printStream;
   }
 
   public void run() {
-    printStream.println("Please enter your maze:");
-    Maze maze = mazeReader.readMazeFromInput();
-    printStream.println("Enter start point:");
-    Optional<Point> start = mazeReader.readPointFromInput();
-    Preconditions.checkArgument(start.isPresent(), "You must provide a start point");
-
-    printStream.println("Enter end point:");
-    Optional<Point> end = mazeReader.readPointFromInput();
-    Preconditions.checkArgument(end.isPresent(), "You must provide a start point");
+    Maze maze = mazeConsole.getMaze();
+    Point start = mazeConsole.getStart();
+    Point end = mazeConsole.getEnd();
 
     long startTime = clock.millis();
-    int shortestPath = MazeSolver.shortestPath(maze, start.get(), end.get());
+    int shortestPath = MazeSolver.shortestPath(maze, start, end);
     long endTime = clock.millis();
+
     printStream.println("The shortest path is " + shortestPath + " steps long.");
     printStream.println("MazeSolver took " + (endTime - startTime) + " ms to compute it.");
   }
