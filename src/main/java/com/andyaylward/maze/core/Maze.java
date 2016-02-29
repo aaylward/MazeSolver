@@ -1,13 +1,13 @@
 package com.andyaylward.maze.core;
 
 public class Maze {
-  private final FillablePoint[][] rows;
+  private final Point[][] rows;
 
-  public Maze(FillablePoint[][] rows) {
+  public Maze(Point[][] rows) {
     this.rows = rows;
   }
 
-  public FillablePoint[][] getRows() {
+  public Point[][] getRows() {
     return rows;
   }
 }

@@ -5,9 +5,12 @@ import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.andyaylward.maze.core.SolveStatistics;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class MazeConsole {
@@ -46,6 +49,15 @@ public class MazeConsole {
   private void reportSuccessfulSolve(SolveStatistics solveStatistics) {
     printStream.println("The shortest path is " + solveStatistics.getShortestPathLength() + " steps long.");
     printStream.println("MazeSolver took " + solveStatistics.getRunDuration() + " ms to compute it.");
+    printStream.println("Path taken was:");
+    Optional<Point> point = Optional.of(solveStatistics.getEndPoint());
+    List<Point> path = new ArrayList<>();
+    while (point.isPresent()) {
+      path.add(point.get());
+      point = point.get().parent;
+    }
+
+    Lists.reverse(path).forEach(printStream::println);
   }
 
   private void reportFailedSolve() {
