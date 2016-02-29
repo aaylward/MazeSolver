@@ -1,7 +1,6 @@
 package com.andyaylward.maze.io;
 
 import com.andyaylward.maze.config.IOModule.StandardInput;
-import com.andyaylward.maze.core.FillablePoint;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.andyaylward.maze.exceptions.InvalidPointInputException;
@@ -71,19 +70,19 @@ public class MazeReader {
   }
 
   private Maze fromLines(List<String> lines) {
-    List<FillablePoint[]> rows = new ArrayList<>();
+    List<Point[]> rows = new ArrayList<>();
 
     for (int lineNumber=0; lineNumber<lines.size(); lineNumber++) {
       rows.add(parseMazeRow(lines.get(lineNumber), lineNumber));
     }
 
-    return new Maze(rows.toArray(new FillablePoint[0][0]));
+    return new Maze(rows.toArray(new Point[0][0]));
   }
 
-  private FillablePoint[] parseMazeRow(String line, int lineNumber) {
-    FillablePoint[] row = new FillablePoint[line.length()];
+  private Point[] parseMazeRow(String line, int lineNumber) {
+    Point[] row = new Point[line.length()];
     for (int i=0; i<line.length(); i++) {
-      row[i] = new FillablePoint(i, lineNumber, line.charAt(i) == EMPTY_POINT);
+      row[i] = new Point(i, lineNumber, line.charAt(i) == EMPTY_POINT);
     }
 
     return row;

@@ -1,6 +1,5 @@
 package com.andyaylward.maze;
 
-import com.andyaylward.maze.core.FillablePoint;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.andyaylward.maze.core.SolveStatistics;
@@ -32,7 +31,11 @@ public class MazeSolver {
     while (!currentPossibilities.isEmpty()) {
       if (currentPossibilities.contains(end)) {
         long endTime = clock.millis();
-        return Optional.of(new SolveStatistics(distanceTravelled, endTime - startTime));
+        Point tracedEndPoint = currentPossibilities.stream()
+            .filter(end::equals)
+            .findFirst()
+            .get();
+        return Optional.of(new SolveStatistics(distanceTravelled, endTime - startTime, tracedEndPoint));
       }
 
       visitedPoints.addAll(currentPossibilities);
@@ -44,37 +47,37 @@ public class MazeSolver {
     return Optional.empty();
   }
 
-  private Set<Point> generateNewPossibilities(FillablePoint[][] rows, Set<Point> visitedPoints, Set<Point> currentPoints) {
+  private Set<Point> generateNewPossibilities(Point[][] rows, Set<Point> visitedPoints, Set<Point> currentPoints) {
     return currentPoints.stream()
         .map((p) -> getPossibleAdjacentPoints(rows, visitedPoints, p))
         .flatMap(Collection::stream)
         .collect(Collectors.toSet());
   }
 
-  private Set<Point> getPossibleAdjacentPoints(FillablePoint[][] rows, Set<Point> visitedPoints, Point point) {
+  private Set<Point> getPossibleAdjacentPoints(Point[][] rows, Set<Point> visitedPoints, Point point) {
     Set<Point> newPoints = new HashSet<>();
 
     if (point.x > 0 && rows[point.x - 1][point.y].empty) {
-      addPointIfNotVisited(visitedPoints, newPoints, point.x - 1, point.y);
+      addPointIfNotVisited(visitedPoints, newPoints, point.x - 1, point.y, point);
     }
 
     if (point.x < rows.length - 1 && rows[point.x + 1][point.y].empty) {
-      addPointIfNotVisited(visitedPoints, newPoints, point.x + 1, point.y);
+      addPointIfNotVisited(visitedPoints, newPoints, point.x + 1, point.y, point);
     }
 
     if (point.y > 0 && rows[point.x][point.y - 1].empty) {
-      addPointIfNotVisited(visitedPoints, newPoints, point.x, point.y - 1);
+      addPointIfNotVisited(visitedPoints, newPoints, point.x, point.y - 1, point);
     }
 
     if (point.y < rows[0].length - 1 && rows[point.x][point.y + 1].empty) {
-      addPointIfNotVisited(visitedPoints, newPoints, point.x, point.y + 1);
+      addPointIfNotVisited(visitedPoints, newPoints, point.x, point.y + 1, point);
     }
 
     return newPoints;
   }
 
-  private void addPointIfNotVisited(Set<Point> visitedPoints, Set<Point> newPoints, int x, int y) {
-    Point newPoint = new Point(x, y);
+  private void addPointIfNotVisited(Set<Point> visitedPoints, Set<Point> newPoints, int x, int y, Point parent) {
+    Point newPoint = new Point(x, y, true, parent);
     if (!visitedPoints.contains(newPoint)) {
       newPoints.add(newPoint);
     }
