@@ -13,6 +13,7 @@ Enter end point: <4,0>
 
 The shortest path is 13 steps long.
 MazeSolver took 50 ms to compute it.
+
 Path taken was:
 <3,2>
 <3,3>
