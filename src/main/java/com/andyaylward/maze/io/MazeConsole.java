@@ -34,7 +34,7 @@ public class MazeConsole {
   }
 
   private Point getPoint(String prompt, String error) {
-    printStream.println(prompt);
+    printStream.print(prompt);
     Optional<Point> pointMaybe = mazeReader.readPointFromInput();
     Preconditions.checkArgument(pointMaybe.isPresent(), error);
     return pointMaybe.get();

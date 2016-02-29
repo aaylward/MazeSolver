@@ -35,6 +35,7 @@ public class Application {
     int shortestPath = MazeSolver.shortestPath(maze, start, end);
     long endTime = clock.millis();
 
+    printStream.println();
     printStream.println("The shortest path is " + shortestPath + " steps long.");
     printStream.println("MazeSolver took " + (endTime - startTime) + " ms to compute it.");
   }
