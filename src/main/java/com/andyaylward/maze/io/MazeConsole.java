@@ -5,7 +5,6 @@ import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.andyaylward.maze.core.SolveStatistics;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import java.io.PrintStream;
@@ -51,14 +50,19 @@ public class MazeConsole {
     printStream.println("MazeSolver took " + solveStatistics.getRunDuration() + " ms to compute it.");
     printStream.println();
     printStream.println("Path taken was:");
-    Optional<Point> point = Optional.of(solveStatistics.getEndPoint());
+    reportPath(Optional.of(solveStatistics.getEndPoint()));
+  }
+
+  private void reportPath(Optional<Point> point) {
     List<Point> path = new ArrayList<>();
     while (point.isPresent()) {
       path.add(point.get());
       point = point.get().parent;
     }
 
-    Lists.reverse(path).forEach(printStream::println);
+    for (int i=path.size()-1; i>=0; i--) {
+      printStream.println(path.get(i));
+    }
   }
 
   private void reportFailedSolve() {
