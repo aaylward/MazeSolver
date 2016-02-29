@@ -1,4 +1,4 @@
-package com.andyaylward;
+package com.andyaylward.maze.core;
 
 public class FillablePoint extends Point {
   public final boolean empty;

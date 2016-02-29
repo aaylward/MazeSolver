@@ -1,5 +1,8 @@
-package com.andyaylward;
+package com.andyaylward.maze;
 
+import com.andyaylward.maze.core.FillablePoint;
+import com.andyaylward.maze.core.Maze;
+import com.andyaylward.maze.core.Point;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,10 +44,9 @@ public class MazeSolverTest {
 
   @Test
   public void itCanFindAnOnlyPath() {
-    MazeSolver mazeSolver = new MazeSolver(maze);
     Point start = new Point(3, 2);
     Point end = new Point(4, 0);
-    assertThat(mazeSolver.shortestPath(start, end)).isEqualTo(13);
+    assertThat(MazeSolver.shortestPath(new Maze(maze), start, end)).isEqualTo(13);
   }
 
   private void emptyPoint(int x, int y) {

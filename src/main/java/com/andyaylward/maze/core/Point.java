@@ -1,4 +1,4 @@
-package com.andyaylward;
+package com.andyaylward.maze.core;
 
 import java.util.Objects;
 
