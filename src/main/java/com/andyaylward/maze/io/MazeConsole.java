@@ -49,6 +49,7 @@ public class MazeConsole {
   private void reportSuccessfulSolve(SolveStatistics solveStatistics) {
     printStream.println("The shortest path is " + solveStatistics.getShortestPathLength() + " steps long.");
     printStream.println("MazeSolver took " + solveStatistics.getRunDuration() + " ms to compute it.");
+    printStream.println();
     printStream.println("Path taken was:");
     Optional<Point> point = Optional.of(solveStatistics.getEndPoint());
     List<Point> path = new ArrayList<>();
