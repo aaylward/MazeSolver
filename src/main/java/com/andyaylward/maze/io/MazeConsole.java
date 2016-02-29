@@ -1,8 +1,10 @@
 package com.andyaylward.maze.io;
 
+import com.andyaylward.maze.config.IOModule.StandardOutput;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 
 import java.io.PrintStream;
 import java.util.Optional;
@@ -11,7 +13,9 @@ public class MazeConsole {
   private final MazeReader mazeReader;
   private final PrintStream printStream;
 
-  public MazeConsole(MazeReader mazeReader, PrintStream printStream) {
+  @Inject
+  public MazeConsole(MazeReader mazeReader,
+                     @StandardOutput PrintStream printStream) {
     this.mazeReader = mazeReader;
     this.printStream = printStream;
   }
