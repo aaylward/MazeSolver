@@ -26,11 +26,11 @@ public class MazeConsole {
   }
 
   public Point getStart() {
-    return getPoint("Enter start point:", "You must provide a start point.");
+    return getPoint("Enter start point: ", "You must provide a start point.");
   }
 
   public Point getEnd() {
-    return getPoint("Enter end point:", "You must provide an end point.");
+    return getPoint("Enter end point: ", "You must provide an end point.");
   }
 
   private Point getPoint(String prompt, String error) {
