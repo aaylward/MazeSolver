@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MazeSolverTest {
   private static final int SIZE = 5;
-  private FillablePoint[][] maze = new FillablePoint[SIZE][SIZE];
+  private FillablePoint[][] rows = new FillablePoint[SIZE][SIZE];
 
   @Before
   public void setUp() {
@@ -21,7 +21,7 @@ public class MazeSolverTest {
     //    e x x x .
     for (int i=0; i<SIZE; i++) {
       for (int j=0; j<SIZE; j++) {
-        maze[i][j] = new FillablePoint(i, j, false);
+        rows[i][j] = new FillablePoint(i, j, false);
       }
     }
 
@@ -46,10 +46,10 @@ public class MazeSolverTest {
   public void itCanFindAnOnlyPath() {
     Point start = new Point(3, 2);
     Point end = new Point(4, 0);
-    assertThat(MazeSolver.shortestPath(new Maze(maze), start, end)).isEqualTo(13);
+    assertThat(MazeSolver.shortestPath(new Maze(rows), start, end)).isEqualTo(13);
   }
 
   private void emptyPoint(int x, int y) {
-    maze[x][y] = new FillablePoint(x, y, true);
+    rows[x][y] = new FillablePoint(x, y, true);
   }
 }
