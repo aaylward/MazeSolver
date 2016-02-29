@@ -9,6 +9,8 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import java.util.Optional;
+
 public class Application {
   private final MazeConsole mazeConsole;
   private final MazeSolver mazeSolver;
@@ -25,7 +27,7 @@ public class Application {
     Point start = mazeConsole.getStart();
     Point end = mazeConsole.getEnd();
 
-    SolveStatistics solveStatistics = mazeSolver.shortestPath(maze, start, end);
+    Optional<SolveStatistics> solveStatistics = mazeSolver.shortestPath(maze, start, end);
     mazeConsole.reportStatistics(solveStatistics);
   }
 
