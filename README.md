@@ -16,5 +16,5 @@ MazeSolver took 51 ms to compute it.
 ```
 
 ####Setup
- - `mvn install` [Logging](https://github.com/aaylward/Logging) and [AndyBasePom](https://github.com/aaylward/AndyBasePom)
+ - `mvn install` [Logging](https://github.com/aaylward/Logging) and [AndyBasePom](https://github.com/aaylward/AndyBasePom) because they aren't published
  - `mvn clean package`
