@@ -4,12 +4,12 @@ import com.andyaylward.maze.core.FillablePoint;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.andyaylward.maze.core.SolveStatistics;
-import com.andyaylward.maze.exceptions.NoPathFoundException;
 import com.google.inject.Inject;
 
 import java.time.Clock;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +21,7 @@ public class MazeSolver {
     this.clock = clock;
   }
 
-  public SolveStatistics shortestPath(Maze maze, Point start, Point end) {
+  public Optional<SolveStatistics> shortestPath(Maze maze, Point start, Point end) {
     long startTime = clock.millis();
 
     int distanceTravelled = 0;
@@ -32,7 +32,7 @@ public class MazeSolver {
     while (!currentPossibilities.isEmpty()) {
       if (currentPossibilities.contains(end)) {
         long endTime = clock.millis();
-        return new SolveStatistics(distanceTravelled, endTime - startTime);
+        return Optional.of(new SolveStatistics(distanceTravelled, endTime - startTime));
       }
 
       visitedPoints.addAll(currentPossibilities);
@@ -41,7 +41,7 @@ public class MazeSolver {
       distanceTravelled++;
     }
 
-    throw new NoPathFoundException();
+    return Optional.empty();
   }
 
   private Set<Point> generateNewPossibilities(FillablePoint[][] rows, Set<Point> visitedPoints, Set<Point> currentPoints) {

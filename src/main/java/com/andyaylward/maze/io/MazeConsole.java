@@ -34,10 +34,22 @@ public class MazeConsole {
     return getPoint("Enter end point: ", "You must provide an end point.");
   }
 
-  public void reportStatistics(SolveStatistics solveStatistics) {
+  public void reportStatistics(Optional<SolveStatistics> solveStatisticsMaybe) {
     printStream.println();
+    if (solveStatisticsMaybe.isPresent()) {
+      reportSuccessfulSolve(solveStatisticsMaybe.get());
+    } else {
+      reportFailedSolve();
+    }
+  }
+
+  private void reportSuccessfulSolve(SolveStatistics solveStatistics) {
     printStream.println("The shortest path is " + solveStatistics.getShortestPathLength() + " steps long.");
     printStream.println("MazeSolver took " + solveStatistics.getRunDuration() + " ms to compute it.");
+  }
+
+  private void reportFailedSolve() {
+    printStream.println("No path found!");
   }
 
   private Point getPoint(String prompt, String error) {
