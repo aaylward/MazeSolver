@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class MazeConsole {
+  static final String START = "s";
+  static final String END = "e";
   static final String RIGHT_UP = "┘";
   static final String DOWN_RIGHT = "└";
   static final String UP_RIGHT = "┌";
@@ -82,9 +84,9 @@ public class MazeConsole {
       int x = reversedPath.get(i).x;
       int y = reversedPath.get(i).y;
       if (i == 0) {
-        maze.getRows()[x][y] = Point.from(reversedPath.get(i), "e");
+        maze.getRows()[x][y] = Point.from(reversedPath.get(i), END);
       } else if (i == reversedPath.size() - 1) {
-        maze.getRows()[x][y] = Point.from(reversedPath.get(i), "s");
+        maze.getRows()[x][y] = Point.from(reversedPath.get(i), START);
       } else {
         maze.getRows()[x][y] = getMidPathPoint(reversedPath.get(i + 1), reversedPath.get(i), reversedPath.get(i - 1));
       }
