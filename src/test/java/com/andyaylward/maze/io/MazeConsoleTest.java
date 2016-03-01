@@ -15,6 +15,6 @@ public class MazeConsoleTest {
     Optional<SolveStatistics> solveStatisticsMaybe = MazeTestUtil.getSolveStatsFor("singlepath.maze", start, end);
     MazeTestUtil.MAZE_CONSOLE.writeSolutionToMaze(solveStatisticsMaybe.get());
     Point[][] rows = solveStatisticsMaybe.get().getMaze().getRows();
-    
+
   }
 }
