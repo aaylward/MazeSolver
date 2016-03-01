@@ -35,7 +35,7 @@ public class MazeSolver {
             .filter(end::equals)
             .findFirst()
             .get();
-        return Optional.of(new SolveStatistics(distanceTravelled, endTime - startTime, tracedEndPoint));
+        return Optional.of(new SolveStatistics(maze, distanceTravelled, endTime - startTime, tracedEndPoint));
       }
 
       visitedPoints.addAll(currentPossibilities);

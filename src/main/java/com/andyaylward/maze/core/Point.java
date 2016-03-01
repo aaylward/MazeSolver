@@ -8,12 +8,14 @@ public class Point {
   public final int y;
   public final boolean empty;
   public final Optional<Point> parent;
+  private final String printableRepresentation;
 
   public Point(int x, int y, boolean empty, Point parent) {
     this.x = x;
     this.y = y;
     this.empty = empty;
     this.parent = Optional.ofNullable(parent);
+    this.printableRepresentation = empty ? "." : "x";
   }
 
   public Point(int x, int y, boolean empty) {
@@ -21,6 +23,7 @@ public class Point {
     this.y = y;
     this.empty = empty;
     this.parent = Optional.empty();
+    this.printableRepresentation = empty ? "." : "x";
   }
 
   public Point(int x, int y) {
@@ -28,6 +31,19 @@ public class Point {
     this.y = y;
     this.empty = true;
     this.parent = Optional.empty();
+    this.printableRepresentation = ".";
+  }
+
+  private Point(int x, int y, boolean empty, Optional<Point> parent, String printableRepresentation) {
+    this.x = x;
+    this.y = y;
+    this.empty = empty;
+    this.parent = parent;
+    this.printableRepresentation = printableRepresentation;
+  }
+
+  public static Point from(Point point, String printableRepresentation) {
+    return new Point(point.x, point.y, point.empty, point.parent, printableRepresentation);
   }
 
   @Override
@@ -46,6 +62,6 @@ public class Point {
 
   @Override
   public String toString() {
-    return String.format("<%d,%d>", x, y);
+    return printableRepresentation;
   }
 }

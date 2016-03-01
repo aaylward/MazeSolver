@@ -4,8 +4,8 @@ import com.andyaylward.maze.config.IOModule.StandardOutput;
 import com.andyaylward.maze.core.Maze;
 import com.andyaylward.maze.core.Point;
 import com.andyaylward.maze.core.SolveStatistics;
+import com.andyaylward.maze.exceptions.InvalidPointInputException;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import java.io.PrintStream;
@@ -14,6 +14,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class MazeConsole {
+  static final String START = "s";
+  static final String END = "e";
+  static final String RIGHT_UP = "┘";
+  static final String DOWN_RIGHT = "└";
+  static final String UP_RIGHT = "┌";
+  static final String RIGHT_DOWN = "┐";
+  static final String VERTICAL = "|";
+  static final String HORIZONTAL = "-";
+
   private final MazeReader mazeReader;
   private final PrintStream printStream;
 
@@ -51,14 +60,80 @@ public class MazeConsole {
     printStream.println("MazeSolver took " + solveStatistics.getRunDuration() + " ms to compute it.");
     printStream.println();
     printStream.println("Path taken was:");
-    Optional<Point> point = Optional.of(solveStatistics.getEndPoint());
+    printSolvedMaze(solveStatistics);
+  }
+
+  private void printSolvedMaze(SolveStatistics solveStatistics) {
+    writeSolutionToMaze(solveStatistics);
+    printRows(solveStatistics.getMaze());
+  }
+
+  private void printRows(Maze maze) {
+    for (Point[] row : maze.getRows()) {
+      for (Point point : row) {
+        printStream.print(point);
+      }
+      printStream.println();
+    }
+  }
+
+  public void writeSolutionToMaze(SolveStatistics solveStatistics) {
+    Maze maze = solveStatistics.getMaze();
+    List<Point> reversedPath = getReversedPath(Optional.of(solveStatistics.getEndPoint()));
+    for (int i = 0; i < reversedPath.size(); i++) {
+      int x = reversedPath.get(i).x;
+      int y = reversedPath.get(i).y;
+      if (i == 0) {
+        maze.getRows()[x][y] = Point.from(reversedPath.get(i), END);
+      } else if (i == reversedPath.size() - 1) {
+        maze.getRows()[x][y] = Point.from(reversedPath.get(i), START);
+      } else {
+        maze.getRows()[x][y] = getMidPathPoint(reversedPath.get(i + 1), reversedPath.get(i), reversedPath.get(i - 1));
+      }
+    }
+  }
+
+  private Point getMidPathPoint(Point previousPoint, Point thisPoint, Point nextPoint) {
+    if (previousPoint.x == thisPoint.x && thisPoint.x == nextPoint.x) {
+      return Point.from(thisPoint, HORIZONTAL);
+    }
+    if (previousPoint.y == thisPoint.y && thisPoint.y == nextPoint.y) {
+      return Point.from(thisPoint, VERTICAL);
+    }
+    if (previousPoint.y < thisPoint.y) {
+      if (nextPoint.x > thisPoint.x) {
+        return Point.from(thisPoint, RIGHT_DOWN);
+      }
+      return Point.from(thisPoint, RIGHT_UP);
+    }
+    if (previousPoint.y > thisPoint.y) {
+      if (nextPoint.x > thisPoint.x) {
+        return Point.from(thisPoint, UP_RIGHT);
+      }
+      return Point.from(thisPoint, DOWN_RIGHT);
+    }
+    if (previousPoint.x < thisPoint.x) {
+      if (nextPoint.y > thisPoint.y) {
+        return Point.from(thisPoint, DOWN_RIGHT);
+      }
+      return Point.from(thisPoint, RIGHT_UP);
+    }
+    if (previousPoint.x > thisPoint.x) {
+      if (nextPoint.y > thisPoint.y) {
+        return Point.from(thisPoint, UP_RIGHT);
+      }
+      return Point.from(thisPoint, RIGHT_DOWN);
+    }
+    throw new InvalidPointInputException();
+  }
+
+  private List<Point> getReversedPath(Optional<Point> point) {
     List<Point> path = new ArrayList<>();
     while (point.isPresent()) {
       path.add(point.get());
       point = point.get().parent;
     }
-
-    Lists.reverse(path).forEach(printStream::println);
+    return path;
   }
 
   private void reportFailedSolve() {
