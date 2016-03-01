@@ -83,10 +83,10 @@ public class MazeConsole {
       int y = reversedPath.get(i).y;
       if (i == 0) {
         maze.getRows()[x][y] = Point.from(reversedPath.get(i), "e");
-      } else if (i == reversedPath.size()-1) {
+      } else if (i == reversedPath.size() - 1) {
         maze.getRows()[x][y] = Point.from(reversedPath.get(i), "s");
       } else {
-        maze.getRows()[x][y] = getMidPathPoint(reversedPath.get(i+1), reversedPath.get(i), reversedPath.get(i-1));
+        maze.getRows()[x][y] = getMidPathPoint(reversedPath.get(i + 1), reversedPath.get(i), reversedPath.get(i - 1));
       }
     }
   }
