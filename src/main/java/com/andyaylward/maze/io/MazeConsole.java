@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class MazeConsole {
-  private static final String RIGHT_UP = "┘";
-  private static final String DOWN_RIGHT = "└";
-  private static final String UP_RIGHT = "┌";
-  private static final String RIGHT_DOWN = "┐";
-  private static final String VERTICAL = "|";
-  private static final String HORIZONTAL = "-";
+  static final String RIGHT_UP = "┘";
+  static final String DOWN_RIGHT = "└";
+  static final String UP_RIGHT = "┌";
+  static final String RIGHT_DOWN = "┐";
+  static final String VERTICAL = "|";
+  static final String HORIZONTAL = "-";
 
   private final MazeReader mazeReader;
   private final PrintStream printStream;
